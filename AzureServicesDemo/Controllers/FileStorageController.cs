@@ -1,8 +1,12 @@
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using AzureServicesDemo.Models;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.WindowsAzure.Storage;
 
 namespace AzureServicesDemo.Controllers
@@ -10,6 +14,7 @@ namespace AzureServicesDemo.Controllers
     public class FileStorageController : Controller
     {
         private readonly AzureStorageManager _azureStorageManager;
+        private readonly TelemetryClient _telemetry = new TelemetryClient();
 
         public FileStorageController()
         {
@@ -20,6 +25,8 @@ namespace AzureServicesDemo.Controllers
             {
                 _azureStorageManager = new AzureStorageManager(cloudStorageAccount);
             }
+
+            _telemetry.InstrumentationKey = TelemetryConfiguration.Active.InstrumentationKey;
         }
 
         public ActionResult Index()
@@ -43,6 +50,8 @@ namespace AzureServicesDemo.Controllers
                 {
                     var fileName = Path.GetFileName(file.FileName);
                     _azureStorageManager.UploadBlob(fileName, file);
+
+                    _telemetry.TrackTrace(string.Format(CultureInfo.InvariantCulture, "Uploaded file {0}", fileName), SeverityLevel.Information);
                 }
             }
 
