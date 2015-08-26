@@ -18,5 +18,10 @@ namespace AzureServicesDemo.Controllers
         {
             return View();
         }
+
+        public ActionResult AwesomeNewFeature()
+        {
+            return View();
+        }
     }
 }
