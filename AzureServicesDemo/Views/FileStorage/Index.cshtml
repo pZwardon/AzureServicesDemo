@@ -1,0 +1,20 @@
+﻿@model List<string>
+
+@{
+    ViewBag.Title = "FileStorage";
+}
+
+<h2>FileStorage</h2>
+
+@using (Html.BeginForm("UploadFile", "FileStorage", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" name="file" />
+    <input type="submit" name="Submit" id="Submit" value="Upload" />
+}
+
+<ul>
+    @foreach (var file in Model)
+    {
+        <li> <a href="@file">@file</a></li>
+    }
+</ul>
